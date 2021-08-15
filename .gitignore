@@ -1,0 +1,7 @@
+node_modules
+# ts build folder
+dist/**/*
+temp/
+*.db
+# Keep environment variables out of version control
+.env
