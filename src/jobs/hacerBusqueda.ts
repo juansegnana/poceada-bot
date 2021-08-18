@@ -23,6 +23,7 @@ const main = async() => {
         
         if (results.success) {
             console.log('Se encontró resultados. Cancelando job.');
+            // TODO: enviarResultados(results);
             return job.cancel();
         };
 
