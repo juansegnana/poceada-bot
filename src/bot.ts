@@ -45,7 +45,7 @@ bot.command('misjugadas', async(ctx) => {
     
     let msgJugadas:string[] = [];
     jugadasUser.forEach(({ jugada }, index) => {
-        msgJugadas.push(`- Jugada nro. ${index}:\n${jugada}`)
+        msgJugadas.push(`- Jugada nro. ${index}:\n${jugada.split(' ').join(', ')}.`)
     });
     return ctx.reply(`${msgJugadas.join('\n')}`);
 
@@ -69,10 +69,11 @@ bot.on('text', async(ctx) => {
 
     const chatId = ctx.message.chat.id;
     const userResult = await getUser(chatId);
+    const text = ctx.message.text;
+
+    console.log(`Log: ${ctx.message.from.first_name} dijo: "${text}".`);
 
     if (!userResult) return ctx.reply('Presioná /start');
-    
-    const text = ctx.message.text;
     
     const JUG_EXP = /^(\d{2}\W?){5}$/;
     

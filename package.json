@@ -1,11 +1,12 @@
 {
   "name": "poceada-scrapper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bot de Telegram que avisa los resultados de la poceada",
-  "main": "dist/main.js",
+  "main": "dist/src/main.js",
   "scripts": {
     "dev": "ts-node ./src/main.ts",
-    "start": "node dist/main.js"
+    "build": "tsc",
+    "start": "tsc && node dist/src/main.js"
   },
   "keywords": [
     "telegram",
