@@ -5,31 +5,43 @@
     - Con un máximo de 15 intentos.
 */
 import { scheduleJob, Job } from 'node-schedule';
-import getNumbers, { jugadaFinal } from '../utils/getNumbers';
+import enviarResultados from '../utils/enviarResultados';
+import getNumbers from '../utils/getNumbers';
 
- 
+
 let taskCounter = 0;
-const MAX_INTENTOS = 1;
+const MAX_INTENTOS = 40;
 
-const main = async() => {
+const main = async () => {
 
-    const EVERY_MINUTE = '*/5 * * * * *';
+    const EVERY_MINUTE = '*/30 * * * * *';
+    console.log('Job se ejecuta cada 30 segundos...');
+    
+    const job: Job = scheduleJob(EVERY_MINUTE, async () => {
 
-    const job:Job = scheduleJob(EVERY_MINUTE, async() => {
         taskCounter++;
         console.log('Ejecutando consulta. Nro:', taskCounter);
-        
+
         const results = await getNumbers();
-        
-        if (results.success) {
-            console.log('Se encontró resultados. Cancelando job.');
+
+        // Se encontraron los resultados. Cancelar job.
+        const case1 = results.success;
+        // NO se encontraron los resultados, pero superó los intentos. Cancelar job.
+        const case2 = taskCounter > MAX_INTENTOS;
+        if (case1 || case2) {
+
+            (case1)
+                ? console.log('Se encontró resultados.')
+                : console.log('Se superó maximo de intentos. Cancelando job.');
+            console.log('Cancelando job.');
+
+            // Enviar resultados a usuarios.
+            enviarResultados(results);
             return job.cancel();
         };
 
-        if (taskCounter > MAX_INTENTOS) {
-            console.log('Se superó maximo de intentos. Cancelando job.');
-            return job.cancel();
-        }
+        // NO se encontraron los resultados. Reintentar job.
+        console.log('Todavía no se subieron las jugadas, intento:', taskCounter);
 
     });
 

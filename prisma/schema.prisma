@@ -11,14 +11,13 @@ generator client {
 }
 
 model User {
-  id Int @id
+  id Int @id @unique
   cant_jugadas Int @default(0)
 }
 
 model Jugada {
-  id Int @id // chat id del usuario
+  id String @id @default(uuid()) // chat id del usuario
+  chatId Int
   jugada String
-  enviar String
+  isSent Boolean @default(false)
 }
-
-

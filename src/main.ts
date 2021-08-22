@@ -1,7 +1,14 @@
-import mainJob from './jobs/mainJob';
+import { scheduleJob } from 'node-schedule';
+import hacerBusqueda from './jobs/hacerBusqueda';
 
-const main = async() => {
-    mainJob();
+const main = async (): Promise<void> => {
+    await require('./bot');
+    // Debe iniciar a las 22:05, los martes, jueves y sábados.
+    const CRON_JOB = '5 22 * * 2,4,6';
+    scheduleJob(CRON_JOB, () => {
+        console.log('Empezando búsqueda...');
+        hacerBusqueda();
+    });
 };
 
 main();
