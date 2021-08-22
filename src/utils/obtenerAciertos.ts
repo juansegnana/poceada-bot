@@ -21,12 +21,13 @@ interface mandarAcierto {
 /**
  * Enviar aciertos a usuarios que cargaron jugadas.
 */
-async function obtenerAciertos(resultados:number[]):Promise<boolean> {
-    
+async function obtenerAciertos(resultados: number[]): Promise<boolean> {
+
     console.log('Comenzando envío de aciertos a users...');
     // Obtener aciertos desde DB.
     const jugadas = await getJugadas();
-    const arrToSend:mandarAcierto[] = [];
+    
+    const arrToSend: mandarAcierto[] = [];
 
     if (!jugadas || jugadas.length < 1) {
         console.log('No se encontraron jugadas de ningún usuario.');
@@ -35,17 +36,16 @@ async function obtenerAciertos(resultados:number[]):Promise<boolean> {
     for (const jug of jugadas) {
 
         const { id, chatId, jugada } = jug;
-        
+
         let cantidadAciertos = 0;
-        const arrJugada:number[] = jugada.split(' ').map(num => parseInt(num));
-        
+        const arrJugada: number[] = jugada.split(' ').map(num => parseInt(num));
+
         if (resultados.length !== 0) {
             resultados.forEach(num => {
                 if (arrJugada.includes(num)) {
                     cantidadAciertos++;
                 };
             });
-            return true;
         }
 
         arrToSend.push({
@@ -60,18 +60,18 @@ async function obtenerAciertos(resultados:number[]):Promise<boolean> {
     console.log('Cantidad de aciertos a mandar:', arrToSend.length);
     for (const user of arrToSend) {
         const { jugadaId, chatId, jugada, cantidadAciertos } = user;
-        const MSG_FINAL = `Tu jugada: ${jugada}\nTuvo: ${cantidadAciertos} acierto${cantidadAciertos!==1 && 's'}.`;
+        const MSG_FINAL = `Tu jugada: ${jugada}\nTuvo: ${cantidadAciertos} acierto${cantidadAciertos !== 1 ? 's' : ''}.`;
         // Mandar a telegram.
         await sendMsg(chatId, MSG_FINAL);
         await updateState(jugadaId);
     };
-    
+
     console.log('Se enviaron los aciertos.');
 
     // Borrar jugada de DB.
     console.log('Borrando jugadas guardadas...');
     await deleteJugadas();
-    
+
     console.log('Fin de envío de aciertos.');
     return true;
 }

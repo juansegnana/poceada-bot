@@ -26,7 +26,7 @@ import obtenerAciertos from "./obtenerAciertos";
  * @returns {boolean} Indica si se envió correctamente.
 */
 async function enviarResultados(results: jugadaFinal): Promise<Boolean> {
-    
+
     console.log('Comenzando envío de resultados a users...');
     // Obtener usuarios a notificar.
     const usersToNotify = await getUsers();
@@ -53,19 +53,12 @@ async function enviarResultados(results: jugadaFinal): Promise<Boolean> {
 
     // Enviar mensajes a usaurios.
     console.log('Mensaje final a mandar:', MSG_FINAL);
-    let usersSent = 0;
     for (const user of usersToNotify) {
         const { id } = user;
         await sendMsg(id, MSG_FINAL);
-        usersSent++;
     }
-    /*
-    usersToNotify.forEach(async ({ id }) => {
-        await sendMsg(id, MSG_FINAL);
-        usersSent++;
-    });
-    */
-    console.log('Total de usuarios notificados:', usersSent);
+
+    console.log('Total de usuarios notificados:', usersToNotify.length);
 
     await obtenerAciertos(resultados);
     console.log('Fin de envío de resultados generales.');
