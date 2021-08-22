@@ -14,30 +14,55 @@
     - enviar a usuarios que no se encontraron resultados
     - facilitar link del día para que revisen manualmente.
 */
+import { getUsers } from "../../prisma/client";
+import { sendMsg } from "../bot";
 import MSG from "../constants/messages";
 import { jugadaFinal } from "./getNumbers";
+import obtenerAciertos from "./obtenerAciertos";
 
 /**
  * Enviar resultados a usuarios que piden notificación.
  * @param {jugadaFinal} results Objeto con datos de búsqueda.
- * @returns {void}
+ * @returns {boolean} Indica si se envió correctamente.
 */
-async function enviarResultados(results:jugadaFinal):Promise<void> {
+async function enviarResultados(results: jugadaFinal): Promise<Boolean> {
+    
+    console.log('Comenzando envío de resultados a users...');
+    // Obtener usuarios a notificar.
+    const usersToNotify = await getUsers();
+    if (!usersToNotify) {
+        console.log('No hay usuarios a enviar. volviendo.');
+        return false;
+    }
 
-    // TODO: Obtener usuarios a notificar.
+    const {
+        success,
+        linkDia,
+        nroSorteo = '0',
+        resultados = []
+    } = results;
 
-    // ----
-
-    const { success, linkDia } = results;
+    let MSG_FINAL: string = '';
 
     if (!success) {
         console.log('No se encontraron jugadas. Notificando usuarios...');
-        // TODO: Enviar usuarios.
-        const MSG_FINAL = `${MSG.noResults}\n🔗 ${linkDia}`;
-
-        return;
+        MSG_FINAL = `${MSG.noResults}\n🔗 ${linkDia}`;
+    } else {
+        MSG_FINAL = `${MSG.successNro} ${nroSorteo}\n${resultados?.join(', ')}`;
     }
 
+    // Enviar mensajes a usaurios.
+    console.log('Mensaje final a mandar:', MSG_FINAL);
+    let usersSent = 0;
+    usersToNotify.forEach(async ({ id }) => {
+        await sendMsg(id, MSG_FINAL);
+        usersSent++;
+    });
+    console.log('Total de usuarios notificados:', usersSent);
+
+    await obtenerAciertos(resultados);
+    console.log('Fin de envío de resultados generales.');
+    return true;
 }
 
 export default enviarResultados;
