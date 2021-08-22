@@ -48,16 +48,23 @@ async function enviarResultados(results: jugadaFinal): Promise<Boolean> {
         console.log('No se encontraron jugadas. Notificando usuarios...');
         MSG_FINAL = `${MSG.noResults}\n🔗 ${linkDia}`;
     } else {
-        MSG_FINAL = `${MSG.successNro} ${nroSorteo}\n${resultados?.join(', ')}`;
+        MSG_FINAL = `${MSG.successNro} ${nroSorteo}\n${resultados?.join(', ')}\n🔗 Más info en: ${linkDia}.`;
     }
 
     // Enviar mensajes a usaurios.
     console.log('Mensaje final a mandar:', MSG_FINAL);
     let usersSent = 0;
+    for (const user of usersToNotify) {
+        const { id } = user;
+        await sendMsg(id, MSG_FINAL);
+        usersSent++;
+    }
+    /*
     usersToNotify.forEach(async ({ id }) => {
         await sendMsg(id, MSG_FINAL);
         usersSent++;
     });
+    */
     console.log('Total de usuarios notificados:', usersSent);
 
     await obtenerAciertos(resultados);

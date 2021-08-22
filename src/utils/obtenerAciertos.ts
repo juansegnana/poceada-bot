@@ -32,8 +32,9 @@ async function obtenerAciertos(resultados:number[]):Promise<boolean> {
         console.log('No se encontraron jugadas de ningún usuario.');
         return false;
     }
+    for (const jug of jugadas) {
 
-    jugadas.forEach(({ id, chatId, jugada }) => {
+        const { id, chatId, jugada } = jug;
         
         let cantidadAciertos = 0;
         const arrJugada:number[] = jugada.split(' ').map(num => parseInt(num));
@@ -54,16 +55,17 @@ async function obtenerAciertos(resultados:number[]):Promise<boolean> {
             cantidadAciertos
         });
 
-    });
+    };
 
     console.log('Cantidad de aciertos a mandar:', arrToSend.length);
-    arrToSend.forEach(async (user) => {
+    for (const user of arrToSend) {
         const { jugadaId, chatId, jugada, cantidadAciertos } = user;
         const MSG_FINAL = `Tu jugada: ${jugada}\nTuvo: ${cantidadAciertos} acierto${cantidadAciertos!==1 && 's'}.`;
         // Mandar a telegram.
         await sendMsg(chatId, MSG_FINAL);
         await updateState(jugadaId);
-    });
+    };
+    
     console.log('Se enviaron los aciertos.');
 
     // Borrar jugada de DB.
