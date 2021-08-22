@@ -11,13 +11,10 @@ Comandos (`/`):
 - borrarjugadas: borra jugadas pendientes de envío.
 Sin comando (sin `/`):
 - `/jugada/`: 5 números de 2 dígitos separados por un espacio. Ejemplo: `11 22 33 44 55`. Esto registra jugada.
-### Configurar TS
-
-Crear un archivo `tsconfig.json` en la carpeta raíz.
 
 ### Configurar DB
 
-Para configurar DB con Prisma, usamos comando `npx prisma init`. Nos crea una carpeta `prisma`, donde allí configuramos nuestro motor de DB y los modelos. Para aplicar cambios y crear una db, hacer comando: `npx prisma migrate`.
+Para crear DB local, ejecutar comando: `npx prisma migrate dev`.
 
 ### Configurar `.env`
 
@@ -27,10 +24,18 @@ DATABASE_URL="file:./poceada.db"
 BOT_TOKEN=
 ```
 
+PD: En caso de que Prisma no te tome la ruta del archivo por el `.env`, tendrás que pasar la ruta en el archivo `prisma/schema.prisma`. 
+
 # Versiones
 
 ## [Unreleased]
 - .
+
+## [0.1.1] - 2021-08-21
+### Changed
+- Mejoras en loops con funciones async/await.
+- Mejora en regex para jugadas.
+
 ## [0.1.0] - 2021-08-21
 ### Added
 - Llamar a _hacerBusqueda_ y mandar resultados a usuarios registrados.
