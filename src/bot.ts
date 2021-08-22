@@ -75,7 +75,7 @@ bot.on('text', async(ctx) => {
 
     if (!userResult) return ctx.reply('Presioná /start');
     
-    const JUG_EXP = /^(\d{2}\W?){5}$/;
+    const JUG_EXP = /^(\d{1,2}\W+){4}(\d{1,2}\W?)$/;
     
     if (!JUG_EXP.test(text)) return ctx.reply('Jugada no válida');
     
