@@ -1,6 +1,8 @@
 import { Telegraf } from "telegraf";
 import { config } from "dotenv";
 import { createJugada, createUser, deleteUser, deleteUserJugadas, getUser, getUserJugadas } from "../prisma/client";
+import generarJugada from './utils/generarJugada';
+
 config();
 
 // https://telegraf.js.org/#shorthand-methods
@@ -45,7 +47,9 @@ bot.command('misjugadas', async(ctx) => {
     
     let msgJugadas:string[] = [];
     jugadasUser.forEach(({ jugada }, index) => {
-        msgJugadas.push(`- Jugada nro. ${index}:\n${jugada.split(' ').join(', ')}.`)
+        // TODO - Get random emoji.
+        const emoji = (index % 2 === 0) ? '🍀' : '🤞';
+        msgJugadas.push(`${emoji} Jugada nro. ${index+1}:\n${jugada.split(' ').join(', ')}.`)
     });
     return ctx.reply(`${msgJugadas.join('\n')}`);
 
@@ -64,6 +68,11 @@ bot.command('borrarjugadas', async(ctx) => {
 
 });
 
+bot.command('generarjugada', async(ctx) => {
+    const numbers = generarJugada();
+    ctx.reply(`🍀 Jugada al azar:\n ${numbers.join(', ')}.`);
+});
+
 
 bot.on('text', async(ctx) => {
 
@@ -77,7 +86,7 @@ bot.on('text', async(ctx) => {
     
     const JUG_EXP = /^(\d{1,2}\W+){4}(\d{1,2}\W?)$/;
     
-    if (!JUG_EXP.test(text)) return ctx.reply('Jugada no válida');
+    if (!JUG_EXP.test(text)) return ctx.reply('🚧 Jugada no válida');
     
     console.log('Jugada válida.');
 
