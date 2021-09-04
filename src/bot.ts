@@ -90,7 +90,7 @@ bot.on('text', async(ctx) => {
     
     console.log('Jugada válida.');
 
-    const jugadaToSave = text.trim();
+    const jugadaToSave = text.replace(/[^\d]/g, ' ').replace(/\s+/g, ' ').trim();
     const result = await createJugada(chatId, jugadaToSave);
     console.log(result);
     console.log('Jugada guardada.');
