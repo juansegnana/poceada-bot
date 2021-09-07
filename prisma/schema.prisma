@@ -2,22 +2,25 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./poceada.db"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["mongoDb"]
 }
 
 model User {
-  id Int @id @unique
+  id Int @id @unique @map("_id")
   cant_jugadas Int @default(0)
+  jugadas Jugada[]
 }
 
 model Jugada {
-  id String @id @default(uuid()) // chat id del usuario
+  id String @id @default(dbgenerated()) @map("_id") @db.ObjectId
   chatId Int
+  user User @relation(fields: [chatId], references: [id]) 
   jugada String
   isSent Boolean @default(false)
 }

@@ -2,6 +2,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+async function main() {
+    console.log('Conectando DB...')
+    await prisma.$connect();
+    console.log('Listo!')
+}
+
+main().catch((e) => {
+    throw e;
+});
+
 // Create
 const createUser = async (chatId: number) => {
     const userCreated = await prisma.user.create({
