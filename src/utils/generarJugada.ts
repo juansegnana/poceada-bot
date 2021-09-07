@@ -5,7 +5,7 @@ export default function ():number[] {
     const jugadasGeneradas:number[] = [];
     
     for (let i = 0; i < cantJugadas; i++) {
-        const randomNumber = Math.floor(Math.random()*(max-min+1)+1);
+        const randomNumber = Math.floor(Math.random()*(max));
         jugadasGeneradas.push(randomNumber);
     }
     
