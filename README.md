@@ -9,27 +9,39 @@ Comandos (`/`):
 - stop: dejar de recibir resultados.
 - misjugadas: listar jugadas pendientes de envío.
 - borrarjugadas: borra jugadas pendientes de envío.
+
 Sin comando (sin `/`):
-- `/jugada/`: 5 números de 2 dígitos separados por un espacio. Ejemplo: `11 22 33 44 55`. Esto registra jugada.
-
-### Configurar DB
-
-Para crear DB local, ejecutar comando: `npx prisma migrate dev`.
-
-### Configurar `.env`
+- `/jugada/`: 5 números de 2 dígitos separados por un espacio o caracter. Ejemplo: `11 22 33 44 55`. Esto registra jugada que será enviada en el próximo sorteo.
+## Configurar `.env`
 
 Crear un archivo `.env` en la carpeta raíz. Colocar ruta de DB y token del bot:
+
 ```txt
-DATABASE_URL="file:./poceada.db"
+# Si es SQLITE
+DATABASE_URL="file:./rutaParaDB.db"
+# Si es MongoDB
+DATABASE_URL="link.de.mongodb"
 BOT_TOKEN=
 ```
 
-PD: En caso de que Prisma no te tome la ruta del archivo por el `.env`, tendrás que pasar la ruta en el archivo `prisma/schema.prisma`. 
+## Database
+### Configurar SQLite
+
+Para crear DB local, en el archivo `schema.prisma` debe indicarse al `provider` como `sqlite`. Luego ejecutar comando: `npx prisma migrate dev`. 
+
+### Configurar MongoDB
+
+Crear una base de datos en [MongoDB](https://www.mongodb.com/), luego copiar link de acceso y pegarlo en el archivo `.env`. En el archivo `schema.prisma`, debe colocarse (en `generator db`) `provider = "mongodb"` y agregar opción `previewFeatures = ["mongoDb"]` en el `generator client`. Más info en: [DOCS](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/mongodb-typescript-mongodb).
 
 # Versiones
 
-## [Unreleased]
-- .
+## [1.0.0] - 2021-09-07
+### Changed
+- Base de datos por defecto es MongoDB.
+- Se adaptó usó en Replit.
+- Se mejoró la exp. regular para capturar jugadas. Permite uso de separadores entre medio de números (`, - / _`, etc.).
+### Added
+- Se puede generar una jugada aleatoria.
 
 ## [0.1.1] - 2021-08-21
 ### Changed
